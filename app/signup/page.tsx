@@ -1,3 +1,3 @@
 export default function Signup() {
-  return <div>Signup Placeholder</div>;
+  return <div>Coming soon</div>;
 }

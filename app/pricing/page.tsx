@@ -1,3 +1,3 @@
 export default function Pricing() {
-  return <div>Pricing Placeholder</div>;
+  return <div>Coming soon</div>;
 }
