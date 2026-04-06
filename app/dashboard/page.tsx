@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import TopicForm from "@/components/TopicForm";
@@ -10,12 +10,15 @@ import UsageCounter from "@/components/UsageCounter";
 import type { GenerateRequest, GenerateResponse, ApiError } from "@/types";
 
 export default function DashboardPage() {
-  const { user, loading, refreshProfile } = useAuth();
+  const { user, profile, loading, refreshProfile } = useAuth();
   const router = useRouter();
   
   const [isGenerating, setIsGenerating] = useState(false);
   const [response, setResponse] = useState<GenerateResponse | null>(null);
   const [error, setError] = useState<string>("");
+
+  const searchParams = useSearchParams();
+  const showUpgradedToast = searchParams.get("upgraded") === "true";
 
   useEffect(() => {
     if (!loading && !user) {
@@ -83,9 +86,20 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {showUpgradedToast && (
+        <div className="mb-8 p-4 rounded-lg bg-primary/10 border border-primary/30 text-primary text-body-md flex items-center gap-3">
+          <svg className="shrink-0" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          Welcome to Pro! You now have unlimited generations.
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
         <div className="lg:col-span-5 w-full sticky top-24">
-          <TopicForm onSubmit={handleGenerate} isLoading={isGenerating} />
+          <TopicForm 
+            onSubmit={handleGenerate} 
+            isLoading={isGenerating} 
+            disabled={profile ? (profile.plan !== "pro" && profile.freeUsesRemaining <= 0) : false} 
+          />
         </div>
         
         <div className="lg:col-span-7 w-full flex flex-col items-end">

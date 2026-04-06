@@ -6,9 +6,10 @@ import type { GenerateRequest, OutputType, CitationFormat, EducationLevel } from
 interface TopicFormProps {
   onSubmit: (request: GenerateRequest) => void;
   isLoading: boolean;
+  disabled?: boolean;
 }
 
-export default function TopicForm({ onSubmit, isLoading }: TopicFormProps) {
+export default function TopicForm({ onSubmit, isLoading, disabled = false }: TopicFormProps) {
   const [topic, setTopic] = useState("");
   const [outputType, setOutputType] = useState<OutputType>("research_summary");
   const [citationFormat, setCitationFormat] = useState<CitationFormat>("apa");
@@ -120,8 +121,8 @@ export default function TopicForm({ onSubmit, isLoading }: TopicFormProps) {
 
       <button
         type="submit"
-        disabled={isLoading}
-        className="btn-primary w-full mt-4 flex justify-center items-center gap-2"
+        disabled={isLoading || disabled}
+        className="btn-primary w-full mt-4 flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isLoading ? (
           <>

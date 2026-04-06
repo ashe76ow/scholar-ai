@@ -12,7 +12,9 @@ export default function UsageCounter() {
       {profile.plan === "pro" ? (
         <>
           <span className="w-2 h-2 rounded-full bg-primary" />
-          <span className="text-primary font-bold">Pro Unlimited</span>
+          <span className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-[#95CCFF] to-[#2297E2]">
+            Unlimited
+          </span>
         </>
       ) : (
         <>
