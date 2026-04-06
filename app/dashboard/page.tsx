@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import TopicForm from "@/components/TopicForm";
 import OutputDisplay from "@/components/OutputDisplay";
@@ -28,9 +29,13 @@ export default function DashboardPage() {
     setResponse(null);
 
     try {
+      const token = await user!.getIdToken();
       const res = await fetch("/api/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
         body: JSON.stringify(request),
       });
 
@@ -83,8 +88,16 @@ export default function DashboardPage() {
           <TopicForm onSubmit={handleGenerate} isLoading={isGenerating} />
         </div>
         
-        <div className="lg:col-span-7 w-full">
+        <div className="lg:col-span-7 w-full flex flex-col items-end">
           <OutputDisplay response={response} isLoading={isGenerating} />
+          {response && !isGenerating && (
+            <Link 
+              href="/history" 
+              className="mt-4 text-outline hover:text-on-surface transition-colors flex items-center gap-1 text-sm font-medium"
+            >
+              Saved to history &rarr;
+            </Link>
+          )}
         </div>
       </div>
     </main>
